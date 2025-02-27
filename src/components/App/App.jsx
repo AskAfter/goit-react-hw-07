@@ -10,6 +10,8 @@ import { fetchContacts } from '../../redux/contactsOps';
 
 function App() {
   const contacts = useSelector(state => state.contacts.contacts.items || []);
+  const loading = useSelector(state => state.contacts.contacts.loading);
+  console.log(loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,6 +32,7 @@ function App() {
           Nothing found <ImShocked className={s.icon} />
         </h2>
       )}
+      {loading && <h2>Loading...</h2>}
     </div>
   );
 }

@@ -12,18 +12,6 @@ const initialState = {
 const slice = createSlice({
   name: 'contacts',
   initialState,
-  reducers: {
-    fetchDataSuccess: (state, action) => {
-      state.contacts.items = action.payload;
-      state.contacts.loading = false;
-    },
-    setIsError: (state, action) => {
-      state.contacts.error = action.payload;
-    },
-    setIsLoading: (state, action) => {
-      state.contacts.loading = action.payload;
-    },
-  },
   extraReducers: builder => {
     builder
       .addCase(fetchContacts.fulfilled, (state, action) => {
@@ -31,7 +19,7 @@ const slice = createSlice({
         state.contacts.items = action.payload;
         state.contacts.loading = false;
       })
-      .addCase(fetchContacts.pending, (state, action) => {
+      .addCase(fetchContacts.pending, state => {
         state.contacts.loading = true;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
@@ -39,12 +27,28 @@ const slice = createSlice({
         state.contacts.error = action.payload;
       })
       .addCase(addContact.fulfilled, (state, action) => {
+        state.contacts.loading = false;
         state.contacts.items.push(action.payload);
       })
+      .addCase(addContact.pending, state => {
+        state.contacts.loading = true;
+      })
+      .addCase(addContact.rejected, (state, action) => {
+        state.contacts.loading = false;
+        state.contacts.error = action.payload;
+      })
+      .addCase(deleteContact.pending, state => {
+        state.contacts.loading = true;
+      })
       .addCase(deleteContact.fulfilled, (state, action) => {
+        state.contacts.loading = false;
         state.contacts.items = state.contacts.items.filter(
           item => item.id !== action.payload
         );
+      })
+      .addCase(deleteContact.rejected, (state, action) => {
+        state.contacts.loading = false;
+        state.contacts.error = action.payload;
       });
   },
 });

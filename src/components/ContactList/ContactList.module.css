@@ -4,6 +4,7 @@
   border-radius: 5px;
   gap: 10px;
   color: black;
+  justify-content: center;
 }
 .item {
   display: flex;

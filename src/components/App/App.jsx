@@ -13,6 +13,7 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchData());
+    console.log('first');
   }, [dispatch]);
   return (
     <div className={s.container}>

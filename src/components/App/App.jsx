@@ -7,11 +7,17 @@ import s from './App.module.css';
 import { ImShocked } from 'react-icons/im';
 import { useEffect } from 'react';
 import { fetchContacts } from '../../redux/contactsOps';
+import {
+  selectContacts,
+  selectError,
+  selectLoading,
+} from '../../redux/contactsSlice';
 
 function App() {
-  const contacts = useSelector(state => state.contacts.contacts.items || []);
-  const loading = useSelector(state => state.contacts.contacts.loading);
-  console.log(loading);
+  const contacts = useSelector(selectContacts || []);
+  const isLoading = useSelector(selectLoading);
+  const isError = useSelector(selectError);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,12 +33,13 @@ function App() {
       <SearchBox />
       {contacts.length > 0 && <ContactList />}
 
-      {contacts.length < 1 && !loading && (
+      {contacts.length < 1 && !isLoading && !isError && (
         <h2 className={s.nothingFound}>
           Nothing found <ImShocked className={s.icon} />
         </h2>
       )}
-      {loading && <h2>Loading...</h2>}
+      {isLoading && <h2>Loading...</h2>}
+      {isError && <h2>Whoops...</h2>}
     </div>
   );
 }

@@ -3,10 +3,11 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import s from './ContactForm.module.css';
 import { addContact } from '../../redux/contactsOps';
+import { selectContacts } from '../../redux/contactsSlice';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts.items || []);
+  const contacts = useSelector(selectContacts || []);
 
   const validationSchema = Yup.object({
     name: Yup.string()

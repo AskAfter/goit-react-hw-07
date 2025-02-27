@@ -25,7 +25,7 @@ function App() {
       <h1 className={s.header}>PhoneBook</h1>
       <ContactForm />
       <SearchBox />
-      {contacts.length > 0 ? (
+      {contacts.length > 0 && !loading ? (
         <ContactList />
       ) : (
         <h2 className={s.nothingFound}>

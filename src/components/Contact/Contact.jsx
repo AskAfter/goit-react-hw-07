@@ -3,11 +3,8 @@ import s from './Contact.module.css';
 import { useDispatch } from 'react-redux';
 import { deleteContact } from '../../redux/contactsSlice';
 
-const Contact = ({ name, number, id, onDelete }) => {
+const Contact = ({ name, number, id }) => {
   const dispatch = useDispatch();
-  // const handleDelete = id => {
-  //   dispatch(deleteContact(id));
-  // };
   return (
     <div className={s.contact}>
       <p className={s.text}>

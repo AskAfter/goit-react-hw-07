@@ -6,15 +6,18 @@ import SearchBox from '../SearchBox/SearchBox';
 import s from './App.module.css';
 import { ImShocked } from 'react-icons/im';
 import { useEffect } from 'react';
-import { fetchData } from '../../redux/contactsOps';
+import { fetchContacts } from '../../redux/contactsOps';
 
 function App() {
   const contacts = useSelector(state => state.contacts.contacts.items || []);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(fetchData());
-    console.log('first');
+    const abortController = new AbortController();
+    dispatch(fetchContacts({ signal: abortController.signal }));
+    return () => abortController.abort();
   }, [dispatch]);
+
   return (
     <div className={s.container}>
       <h1 className={s.header}>PhoneBook</h1>

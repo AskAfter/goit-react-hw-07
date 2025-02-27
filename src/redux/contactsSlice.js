@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { addContact, deleteContact, fetchContacts } from './contactsOps';
 
 const initialState = {
   contacts: {
@@ -12,14 +13,6 @@ const slice = createSlice({
   name: 'contacts',
   initialState,
   reducers: {
-    addContact: (state, action) => {
-      state.contacts.items.push({ id: crypto.randomUUID(), ...action.payload });
-    },
-    deleteContact: (state, action) => {
-      state.contacts.items = state.contacts.items.filter(
-        contact => contact.id !== action.payload
-      );
-    },
     fetchDataSuccess: (state, action) => {
       state.contacts.items = action.payload;
       state.contacts.loading = false;
@@ -31,13 +24,30 @@ const slice = createSlice({
       state.contacts.loading = action.payload;
     },
   },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.contacts.error = false;
+        state.contacts.items = action.payload;
+        state.contacts.loading = false;
+      })
+      .addCase(fetchContacts.pending, (state, action) => {
+        state.contacts.loading = true;
+      })
+      .addCase(fetchContacts.rejected, (state, action) => {
+        state.contacts.loading = false;
+        state.contacts.error = action.payload;
+      })
+      .addCase(addContact.fulfilled, (state, action) => {
+        state.contacts.items.push(action.payload);
+      })
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        state.contacts.items = state.contacts.items.filter(
+          item => item.id !== action.payload
+        );
+      });
+  },
 });
 
-export const {
-  addContact,
-  deleteContact,
-  fetchDataSuccess,
-  setIsError,
-  setIsLoading,
-} = slice.actions;
+export const { setIsError, setIsLoading } = slice.actions;
 export const contactFormReducer = slice.reducer;

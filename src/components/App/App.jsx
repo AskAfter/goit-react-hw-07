@@ -25,9 +25,9 @@ function App() {
       <h1 className={s.header}>PhoneBook</h1>
       <ContactForm />
       <SearchBox />
-      {contacts.length > 0 && !loading ? (
-        <ContactList />
-      ) : (
+      {contacts.length > 0 && <ContactList />}
+
+      {contacts.length < 1 && !loading && (
         <h2 className={s.nothingFound}>
           Nothing found <ImShocked className={s.icon} />
         </h2>

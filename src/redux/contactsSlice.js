@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { addContact, deleteContact, fetchContacts } from './contactsOps';
+import { selectNameFilter } from './filtersSlice';
 
 const initialState = {
   contacts: {
@@ -20,6 +21,7 @@ const slice = createSlice({
         state.contacts.loading = false;
       })
       .addCase(fetchContacts.pending, state => {
+        state.contacts.error = false;
         state.contacts.loading = true;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
@@ -27,10 +29,12 @@ const slice = createSlice({
         state.contacts.error = action.payload;
       })
       .addCase(addContact.fulfilled, (state, action) => {
+        state.contacts.error = false;
         state.contacts.loading = false;
         state.contacts.items.push(action.payload);
       })
       .addCase(addContact.pending, state => {
+        state.contacts.error = false;
         state.contacts.loading = true;
       })
       .addCase(addContact.rejected, (state, action) => {
@@ -38,9 +42,11 @@ const slice = createSlice({
         state.contacts.error = action.payload;
       })
       .addCase(deleteContact.pending, state => {
+        state.contacts.error = false;
         state.contacts.loading = true;
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
+        state.contacts.error = false;
         state.contacts.loading = false;
         state.contacts.items = state.contacts.items.filter(
           item => item.id !== action.payload
@@ -56,5 +62,15 @@ const slice = createSlice({
 export const selectContacts = state => state.contacts.contacts.items;
 export const selectLoading = state => state.contacts.contacts.loading;
 export const selectError = state => state.contacts.contacts.error;
+
+export const selectFilteredContacts = createSelector(
+  [selectContacts, selectNameFilter],
+  (contacts, filter) => {
+    console.log('2');
+    return contacts.filter(item =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  }
+);
 
 export const contactFormReducer = slice.reducer;
